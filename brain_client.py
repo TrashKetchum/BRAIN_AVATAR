@@ -110,8 +110,17 @@ def main():
     global str_stack #stores text to be animated, character by character
     str_stack = []
 
-    #OBS virtual camera on my specific machine, should probably be dynamic but suck an egg
-    cap = cv2.VideoCapture(2) 
+    #dynamic cam assignment check
+    camindex = 0
+    while True:
+        cap = cv2.VideoCapture(camindex)
+        if cap.isOpened() and cap.getBackendName()=="DSHOW":
+            break
+        else:
+            camindex += 1
+        if camindex == 9:
+            print("Failed to find cam, exiting....")
+            sys.exit()
     
     text_thread = threading.Thread(target=eavesdropper, daemon=True)   #on seperate thread so frames dont hang waiting on user input
     text_thread.start()
